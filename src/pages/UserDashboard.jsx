@@ -25,7 +25,7 @@ const UserDashboard = () => {
     <div className="relative w-full min-h-[calc(100vh-80px)] flex flex-col transition-colors duration-500 border-t dark:border-black bg-white dark:bg-black">
       
       {/* Header & Tab Switcher */}
-      <div className="flex flex-col sm:flex-row items-center justify-between lg:justify-start px-5 md:px-10 gap-10 gap-y-3 pt-6">
+      <div className="flex flex-col sm:flex-row items-center justify-between lg:justify-start px-4 md:px-6 gap-10 gap-y-3 pt-6">
         <h1 className="text-2xl font-medium text-black dark:text-white">
           Dashboard
         </h1>
@@ -62,7 +62,7 @@ const UserDashboard = () => {
       </div>
 
       {/* Page Content */}
-      <div className="relative w-full flex-1 px-5 md:px-10 pt-6 pb-24">
+      <div className="relative w-full flex-1 px-4 md:px-6 pt-6 pb-24">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={selectedTab}

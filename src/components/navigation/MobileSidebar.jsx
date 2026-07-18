@@ -74,14 +74,14 @@ export default function MobileSidebar({ open, setOpen }) {
         data-theme={isDark ? "dark" : "light"}
         className={`
         bg-[#F8F8F8] dark:bg-[#2E2F2F]
-        w-[280px]
+        w-[240px]
         h-screen flex flex-col
         fixed md:static
         top-0 left-0 z-50 border-r border-[#E0DDDD] dark:border-[#575757]
         transform transition-transform duration-300
         ${open ? "translate-x-0" : "-translate-x-full"}
         md:translate-x-0
-    `}
+      `}
       >
         <div className="flex md:hidden items-center justify-between px-4 py-4">
           <button onClick={() => setOpen(false)}>

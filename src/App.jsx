@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Provider, useDispatch, useSelector } from "react-redux";
-import { store } from "./redux/store";
+// import { store } from "./redux/store";
 import MainLayout from "./layouts/MainLayout";
 import { lazy, Suspense, useEffect } from "react";
 
@@ -30,14 +30,14 @@ import MobileSidebar from "./components/navigation/MobileSidebar";
 import { ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { refreshAccessToken, fetchUserProfile } from "./redux/features/authThunks";
-import { logout } from "./redux/slices/authSlice";
+// import { logout } from "./redux/slices/authSlice";
 import { Loader } from "lucide-react";
 import ProtectRoute from "./RouteProtection/ProtectRoute";
 
 export default function App() {
   const dispatch = useDispatch();
   const isDark = useSelector((state) => state.theme.isDark);
-  const user = useSelector((state) => state.auth.user);
+  // const user = useSelector((state) => state.auth.user);
   const authChecking = useSelector((state) => state.auth.authChecking);
 
   useEffect(() => {
