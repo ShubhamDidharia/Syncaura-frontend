@@ -19,48 +19,61 @@ function PasswordField({ label, value, onChange }) {
 }
 
 export default function SignUpPage() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' })
   const [message, setMessage] = useState('')
+  const [isLoading, setIsLoading] = useState(false);
   const update = key => event => setForm({ ...form, [key]: event.target.value })
 
   async function handleSubmit(event) {
     event.preventDefault();
 
     // Validate required fields
-    if (!form.name) {
+    // if (!form.name) {
+    if (!form.name.trim()) {
       setMessage("Name is required.");
       return;
     }
-	if (!form.email) {
+	// if (!form.email) {
+  if (!form.email.trim()) {
 		setMessage("Email is required.");
 		return;
 	}
 	// Validate email format
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-	if (!emailRegex.test(form.email)) {
+	// if (!emailRegex.test(form.email)) {
+  if (!emailRegex.test(form.email.trim())) {
 		setMessage("Invalid email address.");
 		return;
 	}
-    if (!form.password) {
+    // if (!form.password) {
+    if (!form.password.trim()) {
       setMessage("Password is required.");
       return;
     }
-    if (!form.confirm) {
+    // if (!form.confirm) {
+    if (!form.confirm.trim()) {
       setMessage("Confirm password is required.");
       return;
     }
     // Check password match
-    if (form.password !== form.confirm) {
+    // if (form.password !== form.confirm) {
+    if (form.password.trim() !== form.confirm.trim()) {
       setMessage("Passwords do not match.");
       return;
     }
 
+    setIsLoading(true);
+    setMessage("");
+
     try {
       const response = await api.post("/auth/register", {
-        name: form.name,
-        email: form.email,
-        password: form.password,
+        // name: form.name,
+        // email: form.email,
+        // password: form.password,
+        name: form.name.trim(),
+        email: form.email.trim(),
+        password: form.password.trim(),
       });
 
       console.log("Register success:", response.data);
@@ -81,6 +94,9 @@ export default function SignUpPage() {
         setMessage("Registration failed.");
       }
     }
+    finally {
+      setIsLoading(false);
+    }
   }
 
   return <main className="page"><section className="auth-card">
@@ -96,7 +112,11 @@ export default function SignUpPage() {
         <PasswordField label="Confirm password" value={form.confirm} onChange={update('confirm')} />
       </div>
       <label className="check"><input type="checkbox" required /><span>I agree to the <a href="#terms">Terms of Service</a> and <a href="#privacy">Privacy Policy</a>.</span></label>
-      <button className="submit" type="submit">Create Account <ArrowRight size={20} /></button>
+      
+      <button className="submit" type="submit" disabled={isLoading}>
+        {isLoading ? "Creating account..." : "Create Account <ArrowRight size={20} />"}
+      </button>
+
       {message && <p className="message" role="status">{message}</p>}
       <div className="divider"><span>OR CONTINUE WITH</span></div>
       <div className="socials">
