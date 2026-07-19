@@ -1,6 +1,7 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import Analytics from "../components/userdashboard/subpages/Analytics";
 import Projects from "../components/userdashboard/subpages/Projects";
 import Dashboard from "../components/userdashboard/subpages/Dashboard";
@@ -9,6 +10,14 @@ const TABS = ["Dashboard", "Projects", "Analytics"];
 
 const UserDashboard = () => {
   const isDark = useSelector((state) => state.theme.isDark);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/signin', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
   const [direction, setDirection] = useState(0);

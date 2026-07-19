@@ -24,6 +24,19 @@ const Theme = () => {
   const { theme = "light", font = "Arial", fontSize = "medium", zoom = 100 } =
     useSelector((s) => s.ui || {});
 
+  // Apply page zoom based on zoom state
+  // Apply font size based on fontSize state
+useEffect(() => {
+  const sizeMap = {
+    small: "85%",
+    medium: "100%",
+    large: "115%",
+    xlarge: "130%",
+  };
+  const size = sizeMap[fontSize] || "100%";
+      document.documentElement.style.fontSize = size;
+}, [fontSize]);
+
   const [language, setLanguage] = useState(
     (localStorage.getItem("app_language") || i18n.language || "en").substring(0, 2)
   );

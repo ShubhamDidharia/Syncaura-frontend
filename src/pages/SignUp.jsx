@@ -27,6 +27,30 @@ export default function SignUpPage() {
   async function handleSubmit(event) {
     event.preventDefault();
 
+    // Validate required fields
+    if (!form.name) {
+      setMessage("Name is required.");
+      return;
+    }
+	if (!form.email) {
+		setMessage("Email is required.");
+		return;
+	}
+	// Validate email format
+	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	if (!emailRegex.test(form.email)) {
+		setMessage("Invalid email address.");
+		return;
+	}
+    if (!form.password) {
+      setMessage("Password is required.");
+      return;
+    }
+    if (!form.confirm) {
+      setMessage("Confirm password is required.");
+      return;
+    }
+    // Check password match
     if (form.password !== form.confirm) {
       setMessage("Passwords do not match.");
       return;
@@ -49,10 +73,13 @@ export default function SignUpPage() {
 
     } catch (error) {
       console.log("Register error:", error.response?.data);
-
-      setMessage(
-        error.response?.data?.message || "Registration failed"
-      );
+      // Show specific server error if available, otherwise generic message
+      const serverMsg = error.response?.data?.message;
+      if (serverMsg) {
+        setMessage(serverMsg);
+      } else {
+        setMessage("Registration failed.");
+      }
     }
   }
 

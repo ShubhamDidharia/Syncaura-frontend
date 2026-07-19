@@ -22,6 +22,23 @@ export default function SignIn() {
   async function handleSubmit(event) {
     event.preventDefault();
 
+    // Validate required fields for login
+    if (!email.trim()) {
+      setMessage('Email is required');
+      return;
+    }
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setMessage('Invalid email address');
+      return;
+    }
+    if (!password) {
+      setMessage('Password is required');
+      return;
+    }
+
+    // Proceed with login
     try {
       const result = await dispatch(
         loginUser({
@@ -66,8 +83,8 @@ export default function SignIn() {
       <h1>Welcome <em>Back</em></h1>
       <p className="lead">Login to continue your journey.</p>
       <div className="fields">
-        <label className="field"><Mail size={19} strokeWidth={1.8} /><input type="email" placeholder="Email" value={email} onChange={event => setEmail(event.target.value)} required /></label>
-        <label className="field"><LockKeyhole size={19} strokeWidth={1.8} /><input type={visible ? 'text' : 'password'} placeholder="Password" value={password} onChange={event => setPassword(event.target.value)} required /><button type="button" className="reveal" aria-label="Show password" onClick={() => setVisible(!visible)}>{visible ? <EyeOff size={18} /> : <Eye size={18} />}</button></label>
+        <label className="field"><Mail size={19} strokeWidth={1.8} /><input type="email" placeholder="Email" value={email} onChange={event => setEmail(event.target.value)} onKeyDown={e => e.key === 'Enter' && handleSubmit(e)} required /></label>
+        <label className="field"><LockKeyhole size={19} strokeWidth={1.8} /><input type={visible ? 'text' : 'password'} placeholder="Password" value={password} onChange={event => setPassword(event.target.value)} onKeyDown={e => e.key === 'Enter' && handleSubmit(e)} required /><button type="button" className="reveal" aria-label="Show password" onClick={() => setVisible(!visible)}>{visible ? <EyeOff size={18} /> : <Eye size={18} />}</button></label>
       </div>
       <div className="options"><label className="check"><input type="checkbox" defaultChecked /><span>Remember Me</span></label><a href="#forgot">Forgot Password?</a></div>
       <button className="submit" type="submit">Log In</button>
