@@ -114,7 +114,7 @@ export default function SignUpPage() {
       <label className="check"><input type="checkbox" required /><span>I agree to the <a href="#terms">Terms of Service</a> and <a href="#privacy">Privacy Policy</a>.</span></label>
       
       <button className="submit" type="submit" disabled={isLoading}>
-        {isLoading ? "Creating account..." : "Create Account <ArrowRight size={20} />"}
+        {isLoading ? "Creating account..." : "Create Account"}
       </button>
 
       {message && <p className="message" role="status">{message}</p>}

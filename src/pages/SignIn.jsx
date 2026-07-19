@@ -8,6 +8,7 @@ import "./style9.css";
 // import api from "../config/axios.js";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../redux/features/authThunks";
+import Spinner from "../components/Spinner";
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -93,7 +94,7 @@ export default function SignIn() {
       <div className="options"><label className="check"><input type="checkbox" defaultChecked /><span>Remember Me</span></label><a href="#forgot">Forgot Password?</a></div>
       
       <button className="submit" type="submit" disabled={isLoading}>
-        {isLoading ? "Logging in..." : "Log In"}
+        {isLoading ? <><Spinner /> <span>Logging in...</span></> : "Log In"}
       </button>
 
       {message && <p className="message" role="status">{message}</p>}

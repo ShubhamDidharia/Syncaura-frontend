@@ -292,3 +292,11 @@
         font-size: 33px
     }
 }
+/* Spinner CSS */
+.spinner {
+  width: 24px;
+  height: 24px;
+  color: #fff;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
