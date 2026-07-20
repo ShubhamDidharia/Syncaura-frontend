@@ -57,7 +57,7 @@ const KanbanColumn = ({ status, tasks, onOpenTask, onDeleteTask }) => {
         ) : (
           tasks.map((task) => (
             <TaskCard
-              key={task.id}
+              key={task._id}
               task={task}
               onOpen={onOpenTask}
               onDelete={onDeleteTask}

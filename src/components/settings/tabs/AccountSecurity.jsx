@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 import TwoFactorModal from "../models/TwoFactorModal";
 import ChangePasswordModal from "../models/ChangePasswordModal";
 
 const AccountSecurity = () => {
   const { t } = useTranslation();
-  const user = useSelector((state) => state.auth.user);
 
-  const [twoStep] = useState(false);
+  const [twoStep, setTwoStep] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
 
@@ -24,15 +22,15 @@ const AccountSecurity = () => {
       <div className="flex items-center justify-between mb-8 w-full px-4 md:px-20">
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white text-xl font-semibold shadow-sm">
-            {(user?.name || "U").charAt(0).toUpperCase()}
+            J
           </div>
 
           <div className="space-y-1">
             <h3 className="font-semibold text-gray-900 dark:text-white">
-              {user?.name || "User"}
+              John Doe
             </h3>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              {user?.email || "No email available"}
+              JohnDoeEmployee@gmail.com
             </p>
           </div>
         </div>
@@ -54,14 +52,22 @@ const AccountSecurity = () => {
             {t("twoStepVerification")}
           </h3>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Two-step verification is not available until verified sign-in enforcement is implemented.
+            {t("twoStepDesc")}
           </p>
         </div>
 
         {/* Controls */}
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-10">
-            <span className="text-sm text-gray-500 dark:text-gray-300">{t("comingSoon")}</span>
+            <button
+              onClick={() => setTwoStep(prev => !prev)}
+              className={`btn-hover relative w-14 h-7 rounded-full duration-300 ${twoStep ? "bg-[#2461E6] dark:bg-[#73FBFD]" : "bg-gray-300 dark:bg-gray-700"}`}
+            >
+              <div
+                className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300
+                  ${twoStep ? "translate-x-7 dark:bg-black" : ""}`}
+              />
+            </button>
 
             <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
               {t("twoStepVerification")}
@@ -72,7 +78,7 @@ const AccountSecurity = () => {
             onClick={() => setShowModal(true)}
             className="px-5 py-1 rounded-full bg-[#2461E6] text-white border border-[#2461E6] text-sm font-semibold flex items-center gap-2 hover:bg-blue-50 hover:text-[#2461E6] dark:bg-[#73FBFD] dark:text-black dark:border-[#73FBFD] dark:hover:bg-gray-800 dark:hover:text-[#73FBFD] transition-colors shadow-sm btn-hover"
           >
-            Learn more
+            {t("edit")}
           </button>
         </div>
       </div>
