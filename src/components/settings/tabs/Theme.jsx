@@ -25,6 +25,18 @@ const Theme = () => {
     useSelector((s) => s.ui || {});
 
   // Apply page zoom based on zoom state
+  useEffect(() => {
+    document.body.style.zoom = `${zoom}%`;
+    // Optional: also set transform for better cross‑browser support
+    document.documentElement.style.transform = `scale(${zoom / 100})`;
+    document.documentElement.style.transformOrigin = '0 0';
+    return () => {
+      // Reset on cleanup
+      document.body.style.zoom = '';
+      document.documentElement.style.transform = '';
+      document.documentElement.style.transformOrigin = '';
+    };
+  }, [zoom]);
   // Apply font size based on fontSize state
 useEffect(() => {
   const sizeMap = {
