@@ -6,6 +6,7 @@ const faqData = [
   {
     question: "What is FlowBit and how does it help my team?",
     answer: "FlowBit is an all-in-one workspace that brings together project management, real-time chat, video meetings, document collaboration, attendance tracking, and performance analytics. Instead of juggling multiple tools, your team gets everything in a single, unified platform — so nothing falls through the cracks."
+
   },
   {
     question: "How do I create and manage projects?",
