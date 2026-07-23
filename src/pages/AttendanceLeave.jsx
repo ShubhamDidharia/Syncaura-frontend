@@ -5,6 +5,7 @@ import {
   Funnel,
   Search,
   XCircleIcon,
+  Loader,
 } from "lucide-react";
 import AttendanceCard from "../components/AttendanceLeave/AttendanceCard";
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
@@ -13,8 +14,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { leaveHistory } from "../constant/constant";
 import LeaveModel from "../components/AttendanceLeave/LeaveModel";
 import AttendanceLeaveFilter from "../components/AttendanceLeave/AttendanceLeaveFilter";
+import { toast } from "react-toastify";
 
-const attendanceData = [
+const initialAttendanceStats = [
   {
     title: "Present Days",
     value: 13,
@@ -52,6 +54,35 @@ const AttendanceLeave = () => {
   const [debouncedValue, setDebouncedValue] = useState("");
   const [showFilter, setShowFilter] = useState(false);
   const [appliedFilters, setAppliedFilters] = useState(null);
+
+  const [attendanceDate, setAttendanceDate] = useState(() => new Date().toISOString().split("T")[0]);
+  const [checkInTime, setCheckInTime] = useState(null);
+  const [checkOutTime, setCheckOutTime] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [attendanceStats, setAttendanceStats] = useState(initialAttendanceStats);
+
+  const handleConfirmAttendance = () => {
+    setIsSubmitting(true);
+    // Simulate API delay
+    setTimeout(() => {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      
+      if (selectedTab === "Check-In" && !checkInTime) {
+        setCheckInTime(timeString);
+        // Increment present days dynamically
+        setAttendanceStats(prev => prev.map(stat => 
+          stat.title === "Present Days" ? { ...stat, value: stat.value + 1 } : stat
+        ));
+        toast.success("Attendance marked successfully!");
+      } else if (selectedTab === "CheckOut") {
+        setCheckOutTime(timeString);
+        toast.success("Check-out recorded successfully!");
+      }
+      setIsSubmitting(false);
+      setShowPopup(false);
+    }, 1000);
+  };
 
   useEffect(() => {
     const timer = setTimeout(
@@ -173,7 +204,7 @@ const AttendanceLeave = () => {
   transition={{ duration: 0.4, ease: "easeOut" }}
   className="flex items-center gap-6 px-4 py-3 mt-2 ml-4 max-w-[980px]"
 >
-        {attendanceData.map((item, index) => (
+        {attendanceStats.map((item, index) => (
           <AttendanceCard key={index} {...item} />
         ))}
         <div className="relative inline-block ml-20">
@@ -184,17 +215,17 @@ const AttendanceLeave = () => {
   whileTap={{ scale: 0.97 }}
   className="cursor-pointer w-[220px] h-[65px] px-4 rounded-2xl shadow-[0_0_10px_1px_#EDEDED] dark:shadow-[0_0_10px_1px_#171717] bg-[#FFFFFF] dark:bg-[#2E2F2F] flex flex-col justify-center"
 >
-  <h1 className="text-[#FF0000] font-medium text-lg">
-    Mark the Presence
+  <h1 className={`font-medium text-lg ${checkInTime ? 'text-[#29CC39]' : 'text-[#FF0000]'}`}>
+    {checkInTime ? 'Presence Marked' : 'Mark the Presence'}
   </h1>
 
   <div className="flex items-center justify-between mt-1">
     <p className="text-[#000000] dark:text-[#F8F8F8] text-sm">
-      In: -
+      In: {checkInTime || '-'}
     </p>
 
     <p className="text-[#000000] dark:text-[#F8F8F8] text-sm">
-      Out: -
+      Out: {checkOutTime || '-'}
     </p>
   </div>
 </motion.div>
@@ -237,9 +268,9 @@ const AttendanceLeave = () => {
                       </h1>
                     </div>
 
-                    <div className="flex items-center justify-center bg-[#FFE2E2D1] px-3 py-1 rounded-2xl">
-                      <p className="text-sm font-normal text-[#FF0000]">
-                        Absent
+                    <div className={`flex items-center justify-center px-3 py-1 rounded-2xl ${checkInTime ? 'bg-[#D1FAE5]' : 'bg-[#FFE2E2D1]'}`}>
+                      <p className={`text-sm font-normal ${checkInTime ? 'text-[#29CC39]' : 'text-[#FF0000]'}`}>
+                        {checkInTime ? 'Present' : 'Absent'}
                       </p>
                     </div>
                   </div>
@@ -248,6 +279,8 @@ const AttendanceLeave = () => {
                     <div className="flex w-full items-center justify-center border border-[#E0DDDD] dark:border-[#000000]">
                       <input
                         type="date"
+                        value={attendanceDate}
+                        onChange={(e) => setAttendanceDate(e.target.value)}
                         className="w-full h-full text-[#898888] px-3 py-1 bg-white dark:bg-[#000000] dark:text-gray-200 outline-none date-input"
                       />
                     </div>
@@ -268,7 +301,7 @@ const AttendanceLeave = () => {
                             selectedTab === item
                               ? "border-[#2461E6] dark:border-[#73FBFD]"
                               : "border-[#EDEDED] dark:border-[#575757] cursor-pointer"
-                          } px-5 py-2`}
+                          } px-5 py-2 rounded-lg`}
                         >
                           <p
                             className={`font-bold text-xs ${
@@ -282,6 +315,21 @@ const AttendanceLeave = () => {
                         </motion.div>
                       ))}
                     </div>
+
+                    <button
+                      onClick={handleConfirmAttendance}
+                      disabled={isSubmitting}
+                      className="w-full mt-2 flex items-center justify-center gap-2 bg-[#2461E6] hover:bg-[#1a4bb3] text-white dark:bg-[#73FBFD] dark:hover:bg-[#5ce1e3] dark:text-black py-2 rounded-lg font-semibold transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader className="size-4 animate-spin" />
+                          Confirming...
+                        </>
+                      ) : (
+                        "Confirm"
+                      )}
+                    </button>
                   </div>
                 </div>
               </motion.div>
